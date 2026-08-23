@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+
+WORKDIR /home/fake-news
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY fake_news/ fake_news/
+COPY model_checkpoints/ model_checkpoints/
+
+ENV MODEL_DIR="/home/fake-news/model_checkpoints/random_forest"
+ENV MODULE_NAME="fake_news.server.main"
+
+EXPOSE 80
+
+CMD ["sh", "-c", "uvicorn ${MODULE_NAME}:app --host 0.0.0.0 --port 80"]
